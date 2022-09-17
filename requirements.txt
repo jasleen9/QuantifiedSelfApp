@@ -1,0 +1,7 @@
+flask
+flask-security
+wtforms
+wtforms.validators
+sqlalchemy
+flask_sqlalchemy
+email_validator

@@ -1,0 +1,20 @@
+class Config():
+    DEBUG = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = None
+
+class LocalDevConfig(Config):
+    #DATABASE CONFIGURATIONS
+    SQLALCHEMY_DATABASE_URI ='sqlite:///app_databse/db.sqlite3'
+
+    #Flask-security configurations
+    SECRET_KEY = 'ABCDEFG'
+    SECURITY_PASSWORD_HASH = 'bcrypt'
+    SECURITY_PASSWORD_SALT = 'SECURITY'
+    SECURITY_REGISTERABLE = True
+    SECURITY_SEND_REGISTER_EMAIL = False
+    SECURITY_UNAUTHORIZED_VIEW = None
+    JSON_SECRET_KEY = False
+    JWT_SECRET_KET = 'ABCDEFG'
+    WTF_CSRF_ENABLED = False
+

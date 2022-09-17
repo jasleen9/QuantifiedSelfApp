@@ -1,0 +1,34 @@
+{% include "header.html" %}
+
+<div>
+    <h2 class = "text-center" style="padding: 20px">
+        Welcome {{ current_user.username}}
+    </h2>
+</div>
+
+    
+<table class="table table-dark table-striped" style="margin-left: auto; margin-right:auto;width:50%">
+    <thead>
+        <tr>
+            <th>Tracker</th>
+            <th>Last Tracked</th>
+            <th>Log Value</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in trackers %}
+        <tr>
+            <td class="align-middle" data-bs-toggle="tooltip" data-bs-placement="left" title="Show Tracker info"><a class="text-light" href="/tracker/{{i['id']}}/show/w">{{i['name']}}</a></td>
+            <td class="align-middle">{{ i['last_tracked']}}</td>
+            <td class="text-center align-middle" data-bs-toggle="tooltip" data-bs-placement="left" title="Log new value"><a class="text-light" href="/tracker/{{i['id']}}/log/add"><i class="fa fa-solid fa-light fa-plus"></i></a></td>
+            <td>
+                <a class = "btn btn-light" href="/tracker/{{i['id']}}/edit">Edit</a>
+                <a class = "btn btn-light" href="/tracker/{{i['id']}}/delete">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>

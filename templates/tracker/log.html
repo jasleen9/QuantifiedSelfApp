@@ -1,0 +1,59 @@
+{% with title=title %}{% include "header.html" %}{% endwith %}
+
+<h1 class="text-center">{% if edit_mode %}Edit Log{% else %}Log{% endif %} Tracker</h1>
+
+{% if form %}
+{% for field, errors in form.errors.items() %}
+<div class="alert alert-error" id="form_validation_error">
+    {{ form[field].label }}: {{ ', '.join(errors) }}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if edit_mode %}
+<form class="shadow-lg p-3 mb-5 bg-body rounded position-absolute top-50 start-50 translate-middle" style="width:25% ; height:60%; text-align:center ;" action="/tracker/{{tracker['id']}}/log/{{log['id']}}/edit" method="POST" name="edit_tracker_log_form">
+{% else %}
+<form class="shadow-lg p-3 mb-5 bg-body rounded position-absolute top-50 start-50 translate-middle" style="width:25% ; height:60%; text-align:center ;" action="/tracker/{{tracker['id']}}/log/add" method="POST" name="add_tracker_log_form">
+    {% endif %}
+    <p>
+        <label for="ldate">Date</label> <input id="ldate" name="ldate" required type="text" value="{% if retry %}{{form.ldate.data.strftime(date_format)}}{% elif edit_mode %}{{log['timestamp']}}{% endif %}">
+    </p>
+
+{% if (tracker['type'] == 'integer' or tracker['type'] == 'float') %}
+    <p>
+        <label for="lvalue">Value ({% if tracker['type'] == 'float' %}Numerical (Decimal){% else %}Numerical (integer){% endif %})</label> <input id="lvalue" name="lvalue" required minlength="1" type="text" value="{% if retry %}{{form.lvalue.data}}{% elif edit_mode %}{{log['value'][0]}}{% endif %}">
+    </p>
+{% elif (tracker['type'] == 'ms') %}
+    <p>
+        Select the Options:<br />
+    {% for i in tracker['choices'] %}
+        <input type="checkbox" id="lchoice{{i}}" name="lchoice" value="{{i}}" {% if edit_mode %}{% if i|string in log['value'] %}checked{% endif %}{% endif %}>
+        <label for="lchoice{{i}}"> {{tracker['choices'][i]}}</label><br>
+    {% endfor %}
+    </p>
+{% endif %}
+
+    <p>
+        <label for="lnote">Notes</label> 
+        <textarea id="lnote" name="lnote" maxlength="255">{% if retry %}{{form.lnote.data}}{% elif edit_mode %}{{log['note']}}{% endif %}</textarea>
+    </p>
+    
+    <input name="tid" id="tid" type="hidden" value="{{tracker['id']}}" required>
+    {% if edit_mode %}
+        <input name="lid" id="lid" type="hidden" value="{{log['id']}}" required>
+    {% endif %}
+
+    <p><input class="btn btn-dark" id="submit" name="submit" type="submit" value="Submit"></p>
+
+</form>
+
+<script>
+    window.onload = function(){
+        let loc = window.location.href;
+        var elementExists = document.getElementById("form_validation_error");
+        if (loc.includes('/log/add') & elementExists == null){
+            document.getElementById('ldate').value = new Date().toLocaleString();
+        }
+    }
+</script>
+
